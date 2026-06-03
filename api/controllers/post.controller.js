@@ -141,3 +141,45 @@ export const deletePost = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const toggleLikePost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).json({
+        message: "Post not found",
+      });
+    }
+
+    const userId = req.user._id;
+
+    const alreadyLiked = post.likes.includes(userId);
+
+    if (alreadyLiked) {
+      post.likes = post.likes.filter(
+        (id) => id.toString() !== userId.toString(),
+      );
+
+      await post.save();
+
+      return res.status(200).json({
+        success: true,
+        message: "Post unliked",
+        likesCount: post.likes.length,
+      });
+    }
+
+    post.likes.push(userId);
+
+    await post.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Post liked",
+      likesCount: post.likes.length,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

@@ -5,6 +5,7 @@ import {
   getPost,
   updatePost,
   deletePost,
+  toggleLikePost,
 } from "../controllers/post.controller.js";
 
 import upload from "../middleware/upload.js";
@@ -20,5 +21,8 @@ router.get("/:id", getPost);
 router.post("/", verifyToken, upload.single("image"), createPost);
 router.put("/:id", verifyToken, upload.single("image"), updatePost);
 router.delete("/:id", verifyToken, deletePost);
+
+/* LIKES */
+router.put("/:id/like", verifyToken, toggleLikePost);
 
 export default router;
