@@ -1,0 +1,174 @@
+{
+  "info": {
+    "name": "MERN Blog API - Quick Collection",
+    "_postman_id": "m-mern-blog-collection",
+    "description": "Login + protected post endpoints (uses {{baseUrl}} and {{token}}).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "auth", "login"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "try {",
+              "  var data = pm.response.json();",
+              "  if (data.token) {",
+              "    pm.environment.set('token', data.token);",
+              "    console.log('Token saved to environment variable: token');",
+              "  }",
+              "} catch (e) { console.log('No JSON response or token not found'); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Posts - Create (form-data)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "title",
+              "value": "My first post",
+              "type": "text"
+            },
+            {
+              "key": "content",
+              "value": "This is the body of my post.",
+              "type": "text"
+            },
+            {
+              "key": "image",
+              "type": "file",
+              "src": ""
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/posts",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "posts"]
+        }
+      }
+    },
+    {
+      "name": "Posts - Get All",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/posts",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "posts"]
+        }
+      }
+    },
+    {
+      "name": "Posts - Get Single",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/posts/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "posts", ":id"]
+        }
+      }
+    },
+    {
+      "name": "Posts - Update (form-data)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "title",
+              "value": "Updated title",
+              "type": "text"
+            },
+            {
+              "key": "content",
+              "value": "Updated content",
+              "type": "text"
+            },
+            {
+              "key": "image",
+              "type": "file",
+              "src": ""
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/posts/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "posts", ":id"]
+        }
+      }
+    },
+    {
+      "name": "Posts - Delete",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/posts/:id",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "posts", ":id"]
+        }
+      }
+    }
+  ]
+}
