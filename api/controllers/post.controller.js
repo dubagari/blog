@@ -7,8 +7,8 @@ import cloudinary from "../config/cloudinary.js";
 
 export const createPost = async (req, res) => {
   try {
-    console.log("BODY:", req.body);
-    console.log("FILE:", req.file);
+    // console.log("BODY:", req.body);
+    // console.log("FILE:", req.file);
     let imageUrl = "";
 
     if (req.file) {

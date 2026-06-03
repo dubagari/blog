@@ -6,6 +6,7 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth.routes.js";
 import postRoutes from "./routes/post.routes.js";
+import commentRoutes from "./routes/comment.routes.js";
 
 dotenv.config();
 
@@ -31,6 +32,9 @@ app.use("/api/auth", authRoutes);
 
 // Post Routes
 app.use("/api/posts", postRoutes);
+
+// Post Comments
+app.use("/api/comments", commentRoutes);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

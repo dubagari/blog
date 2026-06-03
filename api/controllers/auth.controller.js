@@ -43,7 +43,6 @@ export const loginUser = async (req, res, next) => {
 
     // Check user
     const validUser = await User.findOne({ email });
-    console.log("VALID USER:", validUser._id);
 
     if (!validUser) return next(errorHandler(400, "Invalid credentials"));
 

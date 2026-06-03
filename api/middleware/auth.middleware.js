@@ -16,18 +16,13 @@ export const verifyToken = (req, res, next) => {
     }
 
     // Debug logs
-    console.log("decoded:", decoded);
-    console.log("user ID:", decoded.id);
+    // console.log("decoded:", decoded);
+    // console.log("user ID:", decoded.id);
 
     const user = await User.findById(decoded.id).select("-password");
-    console.log("FOUND USER:", user._id);
+    // console.log("FOUND USER:", user._id);
 
-    console.log("decoded id:", decoded.id);
-
-    // const allUsers = await User.find();
-    // console.log("ALL USERS:", allUsers);
-
-    // console.log("FOUND USER:", user);
+    // console.log("decoded id:", decoded.id);
 
     if (!user) {
       return next(errorHandler(404, "User not found"));
