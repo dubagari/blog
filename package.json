@@ -8,7 +8,8 @@
   "type": "module",
   "scripts": {
     "start": "node api/index.js",
-    "dev": "nodemon api/index.js"
+    "dev": "nodemon api/index.js",
+    "create-admin": "node api/CreateAdmin.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
