@@ -9,6 +9,7 @@
   "scripts": {
     "start": "node api/index.js",
     "dev": "nodemon api/index.js",
+    "build": "cd client && npm install && npm run build",
     "create-admin": "node api/CreateAdmin.js"
   },
   "dependencies": {

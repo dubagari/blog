@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
+import path from "path";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth.routes.js";
@@ -14,6 +15,9 @@ dotenv.config();
 // MongoDB connection
 connectDB();
 
+const __dirname = path.resolve();
+const clientPath = path.join(__dirname, "client/dist");
+
 const app = express();
 
 // Middleware
@@ -22,12 +26,16 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(clientPath));
 
 // Test Route
 app.get("/", (req, res) => {
   res.send("Blog API is running...");
 });
 
+app.get((req, res) => {
+  res.sendFile(path.join(clientPath, "index.html"));
+});
 // Auth Routes
 app.use("/api/auth", authRoutes);
 
