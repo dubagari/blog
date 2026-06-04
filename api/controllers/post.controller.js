@@ -105,9 +105,20 @@ export const updatePost = async (req, res) => {
 
     post.title = req.body.title || post.title;
     post.content = req.body.content || post.content;
-    post.image = req.body.image || post.image;
 
-    const updatedPost = await post.save();
+    if (req.file) {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "blog_posts",
+      });
+      post.image = result.secure_url;
+    }
+
+    await post.save();
+
+    const updatedPost = await Post.findById(post._id).populate(
+      "author",
+      "name email",
+    );
 
     res.status(200).json(updatedPost);
   } catch (error) {
@@ -154,7 +165,9 @@ export const toggleLikePost = async (req, res) => {
 
     const userId = req.user._id;
 
-    const alreadyLiked = post.likes.includes(userId);
+    const alreadyLiked = post.likes.some(
+      (id) => id.toString() === userId.toString(),
+    );
 
     if (alreadyLiked) {
       post.likes = post.likes.filter(
@@ -163,22 +176,22 @@ export const toggleLikePost = async (req, res) => {
 
       await post.save();
 
-      return res.status(200).json({
-        success: true,
-        message: "Post unliked",
-        likesCount: post.likes.length,
-      });
+      const updatedPost = await Post.findById(post._id).populate(
+        "author",
+        "name email",
+      );
+      return res.status(200).json(updatedPost);
     }
 
     post.likes.push(userId);
 
     await post.save();
 
-    res.status(200).json({
-      success: true,
-      message: "Post liked",
-      likesCount: post.likes.length,
-    });
+    const updatedPost = await Post.findById(post._id).populate(
+      "author",
+      "name email",
+    );
+    res.status(200).json(updatedPost);
   } catch (error) {
     next(error);
   }

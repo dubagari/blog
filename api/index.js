@@ -7,6 +7,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth.routes.js";
 import postRoutes from "./routes/post.routes.js";
 import commentRoutes from "./routes/comment.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 
 dotenv.config();
 
@@ -35,6 +36,9 @@ app.use("/api/posts", postRoutes);
 
 // Post Comments
 app.use("/api/comments", commentRoutes);
+
+// Admin Routes
+app.use("/api/admin", adminRoutes);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;

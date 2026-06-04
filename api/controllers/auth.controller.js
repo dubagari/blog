@@ -6,7 +6,7 @@ import { errorHandler } from "../util/error.js";
 // Register User
 export const registerUser = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, adminCode } = req.body;
 
     // Validate input
     if (!name || !email || !password) {
@@ -18,6 +18,9 @@ export const registerUser = async (req, res, next) => {
 
     if (userExists) return next(errorHandler(400, "User already exists"));
 
+    const role =
+      adminCode && adminCode === process.env.ADMIN_SECRET ? "admin" : "user";
+
     // Hash password
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(password, 10);
@@ -27,6 +30,7 @@ export const registerUser = async (req, res, next) => {
       name,
       email,
       password: hashedPassword,
+      role,
     });
 
     await user.save();
@@ -57,6 +61,13 @@ export const loginUser = async (req, res, next) => {
     });
     const { password: pass, ...ress } = validUser._doc;
 
+    const userPayload = {
+      _id: validUser._id,
+      name: validUser.name,
+      email: validUser.email,
+      role: validUser.role || "user",
+    };
+
     // Set token as httpOnly cookie and return token in response body
     res.cookie("access_token", token, {
       httpOnly: true,
@@ -69,7 +80,9 @@ export const loginUser = async (req, res, next) => {
       id: validUser._id,
       name: validUser.name,
       email: validUser.email,
+      role: validUser.role || "user",
       token,
+      user: userPayload,
     });
   } catch (error) {
     next(errorHandler(500, error.message));
