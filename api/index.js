@@ -17,7 +17,7 @@ dotenv.config();
 // MongoDB connection
 connectDB();
 
-const clientPath = path.join(__dirname, "client/dist");
+const clientPath = path.join(__dirname, "cleints/dist");
 
 const app = express();
 
