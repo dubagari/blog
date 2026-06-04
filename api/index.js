@@ -27,15 +27,6 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(clientPath));
-
-// Test Route
-app.get("/", (req, res) => {
-  res.send("Blog API is running...");
-});
-app.use((req, res) => {
-  res.sendFile(path.join(clientPath, "index.html"));
-});
 
 // Auth Routes
 app.use("/api/auth", authRoutes);
@@ -48,6 +39,20 @@ app.use("/api/comments", commentRoutes);
 
 // Admin Routes
 app.use("/api/admin", adminRoutes);
+
+app.use(express.static(clientPath));
+
+// Test Route
+app.get("/", (req, res) => {
+  res.send("Blog API is running...");
+});
+// app.use((req, res) => {
+//   res.sendFile(path.join(clientPath, "index.html"));
+// });
+
+app.get(/^\/(?!api).*/, (req, res) => {
+  res.sendFile(path.join(clientPath, "index.html"));
+});
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
